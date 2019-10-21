@@ -9,4 +9,4 @@
 .idea
 .project
 .classpath
-.DS_Store
+**/.DS_Store
