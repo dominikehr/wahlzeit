@@ -68,7 +68,8 @@ public class Photo extends DataObject {
 	public static final int MAX_THUMB_PHOTO_HEIGHT = 150;
 
 	protected PhotoId id = null;
-	
+	//public reference variable associating Photo class with Location as per CW03 homework
+	public Location location;
 	/**
 	 *
 	 */
