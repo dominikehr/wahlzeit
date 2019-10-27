@@ -42,9 +42,11 @@ public class Coordinate {
 	
 	//returns the Cartesian distance between two points
 	public double getDistance(Coordinate coordinate) {
-		return Math.sqrt(Math.pow(this.x - coordinate.getX(), 2)
-				+ Math.pow(this.y - coordinate.getY(), 2) + 
-				Math.pow(this.z - coordinate.getZ(),2));
+		return Math.sqrt(
+				Math.pow(this.x - coordinate.getX(), 2)
+				+ Math.pow(this.y - coordinate.getY(), 2) 
+				+ Math.pow(this.z - coordinate.getZ(), 2)
+						);
 	}
 
 	//overwrite equals() method and forward to isEqual()
@@ -68,7 +70,7 @@ public class Coordinate {
 	}
 	
 	//our custom-built equality contract determining equality based on equal coordinate variables
-	boolean isEqual(Coordinate coordinate) {
+	public boolean isEqual(Coordinate coordinate) {
 		return this.x == coordinate.getX() && this.y == coordinate.getY() && this.z == coordinate.getZ();
 	}
 	

@@ -419,4 +419,12 @@ public class Photo extends DataObject {
 		noVotesAtLastNotification = noVotes;
 		incWriteCount();
 	}
+	
+	/**
+	 * @methodtype set
+	 * set location as per CW03 homework association
+	 */
+	public void setLocation(Location location) {
+		this.location = location;
+	}
 }
