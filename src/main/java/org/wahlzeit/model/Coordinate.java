@@ -41,7 +41,7 @@ public class Coordinate {
 	}
 	
 	//returns the Cartesian distance between two points
-	public double getDistance(Coordinate coordinate) {
+	protected double getDistance(Coordinate coordinate) {
 		return Math.sqrt(
 				Math.pow(this.x - coordinate.getX(), 2)
 				+ Math.pow(this.y - coordinate.getY(), 2) 
@@ -70,7 +70,7 @@ public class Coordinate {
 	}
 	
 	//our custom-built equality contract determining equality based on equal coordinate variables
-	public boolean isEqual(Coordinate coordinate) {
+	protected boolean isEqual(Coordinate coordinate) {
 		return this.x == coordinate.getX() && this.y == coordinate.getY() && this.z == coordinate.getZ();
 	}
 	
