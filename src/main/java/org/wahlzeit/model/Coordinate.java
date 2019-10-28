@@ -71,8 +71,28 @@ public class Coordinate {
 	
 	//our custom-built equality contract determining equality based on equal coordinate variables
 	protected boolean isEqual(Coordinate coordinate) {
-		return this.x == coordinate.getX() && this.y == coordinate.getY() && this.z == coordinate.getZ();
+		//check if null in case direct call to this method
+		if(coordinate == null) {
+			return false;
+		}
+		boolean eqX = compareDoubles(this.getX() , coordinate.getX());
+		boolean eqY = compareDoubles(this.getY(), coordinate.getY());
+		boolean eqZ = compareDoubles(this.getZ(), coordinate.getZ());
+		//if all three equal then equality between two coordinates is given
+		return eqX && eqY && eqZ;
 	}
+	
+	//epsilon value to compare doubles
+	private static final double EPSm15 = 1e-15;
+	private static boolean compareDoubles(double firstDim, double secondDim) {
+		//if either one of the numbers compared is NaN return false
+		if(Double.isNaN(firstDim) || Double.isNaN(secondDim)) {
+			return false;
+		}
+		//check if double values can be considered equal according to specified precision
+		return Math.abs(firstDim - secondDim) < EPSm15; 
+	}
+	
 	
 	//override hashCode
 	//two equal classes --based on our custom equality contract -- will have equal hashes
