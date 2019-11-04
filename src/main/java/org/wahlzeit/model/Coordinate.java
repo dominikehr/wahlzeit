@@ -1,6 +1,5 @@
 package org.wahlzeit.model;
 
-import java.util.Objects;
 
 public class Coordinate {
 	
@@ -51,22 +50,15 @@ public class Coordinate {
 
 	//overwrite equals() method and forward to isEqual()
 	@Override
-	public boolean equals(Object o) {
-		if(this == o) {
+	public boolean equals(Object obj) {
+		if (this == obj)
 			return true;
-		}
-		
-		if(o == null) {
+		if (obj == null)
 			return false;
-		}
-		
-		if(o instanceof Coordinate) {
-			Coordinate coord = (Coordinate) o;
-			//forward to isEqual to check equality based on our definitions
-			return isEqual(coord);
-		}
-		
-		return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Coordinate coord = (Coordinate) obj;
+		return isEqual(coord);
 	}
 	
 	//our custom-built equality contract determining equality based on equal coordinate variables
@@ -94,16 +86,18 @@ public class Coordinate {
 	}
 	
 	
-	//override hashCode
-	//two equal classes --based on our custom equality contract -- will have equal hashes
 	@Override
 	public int hashCode() {
-		int hash = 7;
-		//incorporate all 3 fields defining equality into the hashCode computation
-		hash = 31 * hash + ((this.x == 0) ? 0 : Objects.hashCode(this.x));
-		hash = 31 * hash + ((this.y == 0) ? 0 : Objects.hashCode(this.y));
-		hash = 31 * hash + ((this.z == 0) ? 0 : Objects.hashCode(this.z));
-		return hash;
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(x);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(y);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(z);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
 	}
 	
 }

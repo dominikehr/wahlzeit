@@ -20,13 +20,27 @@
 
 package org.wahlzeit.services;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import junit.framework.TestCase;
 
 /**
  * Test cases for the EmailAddress class.
  */
 public class EmailAddressTest extends TestCase {
-
+	
+	private EmailAddress ea;
+	/*
+	//set up working email address instance for various following test cases
+	@Before
+	public void setUpWorkingEmailAddress() {
+		ea = new EmailAddress("max_mustermann@mail.de");
+	}
+	*/
 	/**
 	 *
 	 */
@@ -64,6 +78,65 @@ public class EmailAddressTest extends TestCase {
 	 */
 	public void testEmptyEmailAddress() {
 		assertFalse(EmailAddress.EMPTY.isValid());
+	}
+	
+	/**
+	 * test asString() method 
+	 */
+	@Test
+	public void testEmailAdressValue() {
+		EmailAddress ea = new EmailAddress("max_mustermann@mail.de");
+		assertTrue(ea.asString().equals("max_mustermann@mail.de"));
+	}
+	
+	/**
+	 * test broken email address and assert that correct exception thrown
+	 */
+	@Test(expected = AddressException.class)
+	public void testBrokenInternetAddress() {
+		EmailAddress mail = new EmailAddress(";");
+		InternetAddress ia = mail.asInternetAddress();
+	}
+	
+	/**
+	 * test working email address and assert that NO exception thrown
+	 */
+	@Test(expected = Test.None.class)
+	public void testWorkingInternetAddress() {
+		EmailAddress ea = new EmailAddress("www.internet.de");
+		InternetAddress ia = ea.asInternetAddress();
+	}
+	
+	/**
+	 * test isEqual() method which works based on equal references
+	 */
+	public void testIsEqualEmailAdress() {
+		EmailAddress ea = new EmailAddress("www.internet.de");
+		assertTrue(ea.isEqual(ea));
+	}
+	
+	
+	/**
+	 * test failing isEqual() method given two unequal references
+	 */
+	public void testIsNotEqualEmailAdress() {
+		EmailAddress ea = new EmailAddress("www.internet.de");
+		assertFalse(ea.isEqual(new EmailAddress("")));
+	}
+	
+	/**
+	 * test failing isValid / isEmpty method
+	 */
+	public void testIsNotValidEmailAddress() {
+		assertFalse(EmailAddress.EMPTY.isValid());
+	}
+	
+	/**
+	 * test working isVaid / is Empty method
+	 */
+	public void testIsValidEmailAddress() {
+		EmailAddress ea =  new EmailAddress("www.internet.de");
+		assertTrue(ea.isValid());
 	}
 
 }
