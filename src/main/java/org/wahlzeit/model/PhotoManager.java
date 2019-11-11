@@ -69,10 +69,10 @@ public class PhotoManager extends ObjectManager {
 		photoTagCollector = PhotoFactory.getInstance().createPhotoTagCollector();
 	}
 
-	/**
-	 *
+	/*
+	 * removed the final modifier for my FootballPhotoManager class to hide it
 	 */
-	public static final PhotoManager getInstance() {
+	public static PhotoManager getInstance() {
 		return instance;
 	}
 

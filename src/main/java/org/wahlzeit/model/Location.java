@@ -3,7 +3,7 @@ package org.wahlzeit.model;
 public class Location {
 	
 	//associated with a particular coordinate
-	public Coordinate coordinate;
+	protected Coordinate coordinate;
 	
 	//constructor in which we instantiate coordinate (aggregation, so weak part-whole relationship)
 	public Location(Coordinate coordinate) {
