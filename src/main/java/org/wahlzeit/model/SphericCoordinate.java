@@ -1,6 +1,6 @@
 package org.wahlzeit.model;
 
-public class SphericCoordinate implements Coordinate {
+public class SphericCoordinate extends AbstractCoordinate {
 	//latitude
 	private double phi;
 	//longitude
@@ -110,14 +110,7 @@ public class SphericCoordinate implements Coordinate {
 	private double sphericCoordinateAsCartesianZ() {
 		return this.getRadius() * Math.cos(this.getPhi());
 	} 
-	
-	@Override
-	public double getCartesianDistance(Coordinate coordinate) {
-		//use conversion method to convert this instance into CartesianCoordinate
-		CartesianCoordinate cartCoord = this.asCartesianCoordinate();
-		return cartCoord.getCartesianDistance(coordinate);
-	}
-	
+		
 	/*
 	 * @methodtype: conversion method
 	 */
@@ -138,58 +131,34 @@ public class SphericCoordinate implements Coordinate {
 	 * computation as per spherical law of cosine: https://en.wikipedia.org/wiki/Great-circle_distance#Formulae
 	 */
 	private double doGetCentralAngle(SphericCoordinate sphereCoord) {
-//		//delta longitude (delta theta)
+		// delta longitude (delta theta)
 		double longitudeDiff = Math.abs(this.getTheta() - sphereCoord.getTheta());
 		return Math.acos(Math.sin(this.getPhi()) * Math.sin(sphereCoord.getPhi()) + 
 				Math.cos(this.getPhi()) * Math.cos(sphereCoord.getPhi()) * Math.cos(longitudeDiff));
 	}
-
-	//overwrite equals() method and forward to isEqual()
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SphericCoordinate coord = (SphericCoordinate) obj;
-		return isEqual(coord);
-	}
 	
 	/*
-	 * @methodtype boolean query method
+	 * @methodtype: boolean query method
+	 * @methodproperty: primitive
 	 * custom-built equality contract determining equality 
 	 * based on equal coordinate variables
 	 */
 	@Override
-	public boolean isEqual(Coordinate coordinate) {
-		//check if null in case direct call to this method
-		if(coordinate == null) {
-			return false;
-		}
-		
+	protected boolean isEqualHelper(Coordinate coordinate) {
+		// as this method has been invoked on a Coordinate of dynamic type SphericCoordinate
+		// we convert the coordinate parameter into SphericCoordinate as well and invoke
+		// equality check in terms of double values on two SphericCoordinates
 		SphericCoordinate sphereCoord = coordinate.asSphericCoordinate();
 		
+		//check equality of double values using helper method provided in abstract superclass
 		boolean eqPhi = compareDoubles(this.getPhi() , sphereCoord.getPhi());
 		boolean eqTheta = compareDoubles(this.getTheta(), sphereCoord.getTheta());
 		boolean eqRadius = compareDoubles(this.getRadius(), sphereCoord.getRadius());
 		//if all three equal then equality between two coordinates is given
 		return eqPhi && eqTheta && eqRadius;
 	}
-	
-	/*
-	 * @methodtype: comparison method
-	 */
-	private boolean compareDoubles(double firstDim, double secondDim) {
-		//if either one of the numbers compared is NaN return false
-		if(Double.isNaN(firstDim) || Double.isNaN(secondDim)) {
-			return false;
-		}
-		//check if double values can be considered equal according to specified precision
-		return Math.abs(firstDim - secondDim) < EPSm8; 
-	}
-	
+
+	// override hashCode as customary when overriding equals()
 	@Override
 	public int hashCode() {
 		final int prime = 31;

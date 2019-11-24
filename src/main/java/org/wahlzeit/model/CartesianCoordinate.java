@@ -1,6 +1,6 @@
 package org.wahlzeit.model;
 
-public class CartesianCoordinate implements Coordinate{
+public class CartesianCoordinate extends AbstractCoordinate{
 	//three private coordinate Variables reflecting x,y,z dimensions
 		private double x;
 		private double y;
@@ -59,67 +59,6 @@ public class CartesianCoordinate implements Coordinate{
 							);
 		}
 		
-		//overwrite equals() method and forward to isEqual()
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			CartesianCoordinate coord = (CartesianCoordinate) obj;
-			return isEqual(coord);
-		}
-		
-		/*
-		 * @methodtype boolean query method
-		 * custom-built equality contract determining equality 
-		 * based on equal coordinate variables
-		 */
-		@Override
-		public boolean isEqual(Coordinate coordinate) {
-			//check if null in case direct call to this method
-			if(coordinate == null) {
-				return false;
-			}
-			
-			//use conversion method to get CartesianCoordiante 
-			CartesianCoordinate cartCoord = coordinate.asCartesianCoordinate();
-			
-			boolean eqX = compareDoubles(this.getX() , cartCoord.getX());
-			boolean eqY = compareDoubles(this.getY(), cartCoord.getY());
-			boolean eqZ = compareDoubles(this.getZ(), cartCoord.getZ());
-			//if all three equal then equality between two coordinates is given
-			return eqX && eqY && eqZ;
-		}
-		
-		/*
-		 * @methodtype: comparison method
-		 */
-		private boolean compareDoubles(double firstDim, double secondDim) {
-			//if either one of the numbers compared is NaN return false
-			if(Double.isNaN(firstDim) || Double.isNaN(secondDim)) {
-				return false;
-			}
-			//check if double values can be considered equal according to specified precision
-			return Math.abs(firstDim - secondDim) < EPSm8; 
-		}
-		
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			long temp;
-			temp = Double.doubleToLongBits(x);
-			result = prime * result + (int) (temp ^ (temp >>> 32));
-			temp = Double.doubleToLongBits(y);
-			result = prime * result + (int) (temp ^ (temp >>> 32));
-			temp = Double.doubleToLongBits(z);
-			result = prime * result + (int) (temp ^ (temp >>> 32));
-			return result;
-		}
-
 		/*
 		 * @methodtype: conversion method
 		 * @methodproperty: composed
@@ -150,7 +89,8 @@ public class CartesianCoordinate implements Coordinate{
 		 */
 		private double cartesianCoordinateAsSphericTheta() {
 			assertDoubleIsNotZero(this.getX());
-			return Math.atan(this.getY() / this.getX());
+			// use atan2 instead of atan to deal with corner cases
+			return Math.atan2(this.getY(), this.getX());
 		}
 		
 		/*
@@ -161,20 +101,43 @@ public class CartesianCoordinate implements Coordinate{
 			assertDoubleIsNotZero(this.cartesianCoordinateAsSphericRadius());
 			return Math.acos(this.getZ() / this.cartesianCoordinateAsSphericRadius());
 		}
-			
+		
 		/*
-		 * @methodtype: assertion method
+		 * @methodtype: boolean query method
+		 * @methodproperty: primitive
+		 * custom-built equality contract determining equality 
+		 * based on equal coordinate variables
 		 */
-		private void assertDoubleIsNotZero(double d) {
-			if(d >= - EPSm8 && d <= EPSm8) {
-				throw new IllegalArgumentException("Denominator of division is zero");
-			}
+		@Override
+		protected boolean isEqualHelper(Coordinate coordinate) {
+			// as this method has been invoked on a Coordinate of dynamic type CartesianCoordinate
+			// we convert the coordinate parameter into CartesianCoordinate as well and invoke
+			// equality check in terms of double values on two CartesianCoordinates
+			CartesianCoordinate cartCoord = coordinate.asCartesianCoordinate();
+			
+			//check equality of double values using helper method provided in abstract superclass
+			boolean eqX = compareDoubles(this.getX() , cartCoord.getX());
+			boolean eqY = compareDoubles(this.getY(), cartCoord.getY());
+			boolean eqZ = compareDoubles(this.getZ(), cartCoord.getZ());
+			//if all three equal then equality between two coordinates is given
+			return eqX && eqY && eqZ;
 		}
 		
+		// override hashCode as customary when overriding equals()
 		@Override
-		public double getCentralAngle(Coordinate coordinate) {
-			//forward to computation of CentralAngle inside SphericCoordinate class
-			return this.asSphericCoordinate().getCentralAngle(coordinate);
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			long temp;
+			temp = Double.doubleToLongBits(x);
+			result = prime * result + (int) (temp ^ (temp >>> 32));
+			temp = Double.doubleToLongBits(y);
+			result = prime * result + (int) (temp ^ (temp >>> 32));
+			temp = Double.doubleToLongBits(z);
+			result = prime * result + (int) (temp ^ (temp >>> 32));
+			return result;
 		}
+
+
 
 }
