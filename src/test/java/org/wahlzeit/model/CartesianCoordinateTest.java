@@ -95,13 +95,6 @@ public class CartesianCoordinateTest {
 		String test = "test";
 		assertNotEquals(cartCoord5,test);
 	}
-	
-	//check inequality with Double.NaN involved
-	@Test
-	public void testNotEquals4() {
-		CartesianCoordinate cartCoordNaN = new CartesianCoordinate(0, Double.NaN,6.7);
-		assertNotEquals(cartCoord1,cartCoordNaN);
-	}
 
 	//check equality of hashCode
 	@Test

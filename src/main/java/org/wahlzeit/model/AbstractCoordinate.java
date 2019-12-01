@@ -9,9 +9,17 @@ public abstract class AbstractCoordinate implements Coordinate {
 	 */
 	@Override
 	public double getCartesianDistance(Coordinate coordinate) {
+		assertClassInvariants();
 		CartesianCoordinate cartCoord = this.asCartesianCoordinate();
 		return cartCoord.getCartesianDistance(coordinate);
 	}
+
+	/*
+	 * @methodtype: assertion method
+	 * using runtime polymorphism this will be invoked on the specific Coordinate subclass.
+	 * asserts that class invariants are always maintained before and after method invocation
+	 */
+	protected abstract void assertClassInvariants();
 
 	/*
 	 * convert instance on which we invoke this to SphericCoordinate
@@ -20,6 +28,7 @@ public abstract class AbstractCoordinate implements Coordinate {
 	 */
 	@Override
 	public double getCentralAngle(Coordinate coordinate) {
+		assertClassInvariants();
 		SphericCoordinate sphereCoord = this.asSphericCoordinate();
 		return sphereCoord.getCentralAngle(coordinate);
 	}
@@ -62,27 +71,4 @@ public abstract class AbstractCoordinate implements Coordinate {
 	 */
 	protected abstract boolean isEqualHelper(Coordinate coordinate);
 	
-	/*
-	 * @methodtype: comparison method
-	 * provide double comparison method for all subclasses
-	 */
-	protected boolean compareDoubles(double firstDim, double secondDim) {
-		//if either one of the numbers compared is NaN return false
-		if(Double.isNaN(firstDim) || Double.isNaN(secondDim)) {
-			return false;
-		}
-		//check if double values can be considered equal according to specified precision
-		return Math.abs(firstDim - secondDim) < EPSm8; 
-	}
-	
-	/*
-	 * @methodtype: assertion method
-	 * provide double assertion method for all subclasses
-	 */
-	protected void assertDoubleIsNotZero(double d) {
-		if(d >= - EPSm8 && d <= EPSm8) {
-			throw new IllegalArgumentException("Denominator of division is zero");
-		}
-	}
-
 }

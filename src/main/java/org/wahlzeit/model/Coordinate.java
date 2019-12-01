@@ -1,9 +1,6 @@
 package org.wahlzeit.model;
 
-public interface Coordinate {
-	//epsilon value to compare doubles
-	double EPSm8 = 1e-8;
-	
+public interface Coordinate {	
 	CartesianCoordinate asCartesianCoordinate();
 	double getCartesianDistance(Coordinate coordinate);
 	SphericCoordinate asSphericCoordinate();

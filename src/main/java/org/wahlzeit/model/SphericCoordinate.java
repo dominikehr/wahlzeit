@@ -1,5 +1,7 @@
 package org.wahlzeit.model;
 
+import org.wahlzeit.utils.DoubleValuesUtil;
+
 public class SphericCoordinate extends AbstractCoordinate {
 	//latitude
 	private double phi;
@@ -8,6 +10,12 @@ public class SphericCoordinate extends AbstractCoordinate {
 	private double radius;
 	
 	public SphericCoordinate(double phi, double theta, double radius) {
+		boolean isValidDouble = DoubleValuesUtil.isValidDouble(phi) &&
+				DoubleValuesUtil.isValidDouble(theta) && DoubleValuesUtil.isValidDouble(radius);
+		if(!isValidDouble) {
+			throw new IllegalArgumentException("Attributes phi, theta, radius must all be valid and finite double values");
+		}
+		
 		assertIsValidPhi(phi);
 		this.phi = phi;
 		
@@ -23,6 +31,7 @@ public class SphericCoordinate extends AbstractCoordinate {
 	}
 
 	public void setPhi(double phi) {
+		// check whether valid input provided else throw exception
 		assertIsValidPhi(phi);
 		this.phi = phi;
 	}
@@ -32,6 +41,7 @@ public class SphericCoordinate extends AbstractCoordinate {
 	}
 
 	public void setTheta(double theta) {
+		// check whether valid input provided else throw exception
 		assertIsValidTheta(theta);
 		this.theta = theta;
 	}
@@ -41,16 +51,16 @@ public class SphericCoordinate extends AbstractCoordinate {
 	}
 
 	public void setRadius(double radius) {
+		// check whether valid input provided else throw exception
 		assertIsValidRadius(radius);
 		this.radius = radius;
 	}
-	
 	
 	/*
 	 * @methodtype: assertion 
 	 */
 	private void assertIsValidPhi(double phi) {
-		if(Double.isNaN(phi) || Double.isInfinite(phi) || phi < 0.0 || phi >= 2*Math.PI) {
+		if(!DoubleValuesUtil.isValidDouble(phi) || phi < 0.0 || phi >= 2*Math.PI) {
 			throw new IllegalArgumentException("Phi must be a valid number between zero and 2PI!");
 		}
 	}
@@ -59,7 +69,7 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 * @methodtype: assertion 
 	 */
 	private void assertIsValidTheta(double theta) {
-		if(Double.isNaN(theta) || Double.isInfinite(theta) || theta < 0.0 || theta > Math.PI) {
+		if(!DoubleValuesUtil.isValidDouble(theta) || theta < 0.0 || theta > Math.PI) {
 			throw new IllegalArgumentException("Theta must be a valid number between zero and PI!");
 		}
 	}
@@ -68,7 +78,7 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 * @methodtype: assertion 
 	 */
 	private void assertIsValidRadius(double radius) {
-		if(Double.isNaN(radius) || Double.isInfinite(radius) || radius < 0.0) {
+		if(!DoubleValuesUtil.isValidDouble(radius) || radius < 0.0) {
 			throw new IllegalArgumentException("Radius must be a valid non-negative number!");
 		}
 	}
@@ -79,10 +89,15 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 */
 	@Override
 	public CartesianCoordinate asCartesianCoordinate() {
+		//first make sure that we start the conversion with a valid SphericCoordinate
+		assertClassInvariants();
+		
 		double x = sphericCoordinateAsCartesianX();
 		double y = sphericCoordinateAsCartesianY();
 		double z = sphericCoordinateAsCartesianZ();
 		
+		// ensure that computation did not violate class invariants 
+		assertClassInvariants();
 		return new CartesianCoordinate(x,y,z);
 	}
 	
@@ -122,7 +137,11 @@ public class SphericCoordinate extends AbstractCoordinate {
 	@Override
 	public double getCentralAngle(Coordinate coordinate) {
 		SphericCoordinate sphereCoord = coordinate.asSphericCoordinate();
-		return doGetCentralAngle(sphereCoord);
+		double centralAngle = doGetCentralAngle(sphereCoord);
+		
+		// ensure that computation did not violate class invariants 
+		assertClassInvariants();
+		return centralAngle;
 	}
 	
 	/*
@@ -151,9 +170,9 @@ public class SphericCoordinate extends AbstractCoordinate {
 		SphericCoordinate sphereCoord = coordinate.asSphericCoordinate();
 		
 		//check equality of double values using helper method provided in abstract superclass
-		boolean eqPhi = compareDoubles(this.getPhi() , sphereCoord.getPhi());
-		boolean eqTheta = compareDoubles(this.getTheta(), sphereCoord.getTheta());
-		boolean eqRadius = compareDoubles(this.getRadius(), sphereCoord.getRadius());
+		boolean eqPhi = DoubleValuesUtil.compareDoubles(this.getPhi() , sphereCoord.getPhi());
+		boolean eqTheta = DoubleValuesUtil.compareDoubles(this.getTheta(), sphereCoord.getTheta());
+		boolean eqRadius = DoubleValuesUtil.compareDoubles(this.getRadius(), sphereCoord.getRadius());
 		//if all three equal then equality between two coordinates is given
 		return eqPhi && eqTheta && eqRadius;
 	}
@@ -171,6 +190,27 @@ public class SphericCoordinate extends AbstractCoordinate {
 		temp = Double.doubleToLongBits(radius);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
+	}
+
+	/*
+	 * @methodtype: assertion method
+	 * ensuring that class invariants are always maintained
+	 */
+	@Override
+	protected void assertClassInvariants() {
+		// generic checks
+		assert !Double.isNaN(phi);
+		assert !Double.isNaN(theta);
+		assert !Double.isNaN(radius);
+		assert Double.isFinite(phi);
+		assert Double.isFinite(theta);
+		assert Double.isFinite(radius);
+		
+		// attribute-specific checks
+		assert phi >= 0.0 || phi < 2*Math.PI;
+		assert theta >= 0.0 || theta <= Math.PI;
+		assert radius >= 0.0;
+		
 	}
 		
 }
