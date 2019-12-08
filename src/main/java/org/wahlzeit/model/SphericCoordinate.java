@@ -59,7 +59,7 @@ public class SphericCoordinate extends AbstractCoordinate {
 	/*
 	 * @methodtype: assertion 
 	 */
-	private void assertIsValidPhi(double phi) {
+	protected static void assertIsValidPhi(double phi) {
 		if(!DoubleValuesUtil.isValidDouble(phi) || phi < 0.0 || phi >= 2*Math.PI) {
 			throw new IllegalArgumentException("Phi must be a valid number between zero and 2PI!");
 		}
@@ -68,7 +68,7 @@ public class SphericCoordinate extends AbstractCoordinate {
 	/*
 	 * @methodtype: assertion 
 	 */
-	private void assertIsValidTheta(double theta) {
+	protected static void assertIsValidTheta(double theta) {
 		if(!DoubleValuesUtil.isValidDouble(theta) || theta < 0.0 || theta > Math.PI) {
 			throw new IllegalArgumentException("Theta must be a valid number between zero and PI!");
 		}
@@ -77,7 +77,7 @@ public class SphericCoordinate extends AbstractCoordinate {
 	/*
 	 * @methodtype: assertion 
 	 */
-	private void assertIsValidRadius(double radius) {
+	protected static void assertIsValidRadius(double radius) {
 		if(!DoubleValuesUtil.isValidDouble(radius) || radius < 0.0) {
 			throw new IllegalArgumentException("Radius must be a valid non-negative number!");
 		}
@@ -133,23 +133,13 @@ public class SphericCoordinate extends AbstractCoordinate {
 	public SphericCoordinate asSphericCoordinate() {
 		return this;
 	}
-	
-	@Override
-	public double getCentralAngle(Coordinate coordinate) {
-		SphericCoordinate sphereCoord = coordinate.asSphericCoordinate();
-		double centralAngle = doGetCentralAngle(sphereCoord);
 		
-		// ensure that computation did not violate class invariants 
-		assertClassInvariants();
-		return centralAngle;
-	}
-	
 	/*
 	 * @methodtype: get method
 	 * @methodproperty: primitive
 	 * computation as per spherical law of cosine: https://en.wikipedia.org/wiki/Great-circle_distance#Formulae
 	 */
-	private double doGetCentralAngle(SphericCoordinate sphereCoord) {
+	protected double doGetCentralAngle(SphericCoordinate sphereCoord) {
 		// delta longitude (delta theta)
 		double longitudeDiff = Math.abs(this.getTheta() - sphereCoord.getTheta());
 		return Math.acos(Math.sin(this.getPhi()) * Math.sin(sphereCoord.getPhi()) + 
@@ -198,18 +188,18 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 */
 	@Override
 	protected void assertClassInvariants() {
-		// generic checks
-		assert !Double.isNaN(phi);
-		assert !Double.isNaN(theta);
-		assert !Double.isNaN(radius);
-		assert Double.isFinite(phi);
-		assert Double.isFinite(theta);
-		assert Double.isFinite(radius);
+		if(Double.isNaN(phi)) throw new IllegalStateException("attribute phi is NaN");
+		if(Double.isNaN(theta)) throw new IllegalStateException("attribute theta is NaN");
+		if(Double.isNaN(radius)) throw new IllegalStateException("attribute radius is NaN");
+		if(Double.isInfinite(phi)) throw new IllegalStateException("attribute phi is infinite");
+		if(Double.isInfinite(theta)) throw new IllegalStateException("attribute theta is infinite");
+		if(Double.isInfinite(radius)) throw new IllegalStateException("attribute radius is infinite");
+		
 		
 		// attribute-specific checks
-		assert phi >= 0.0 || phi < 2*Math.PI;
-		assert theta >= 0.0 || theta <= Math.PI;
-		assert radius >= 0.0;
+		if(phi < 0.0 || phi >= 2* Math.PI) throw new IllegalStateException("Phi must be >= 0 and < 2PI");
+		if(theta < 0.0 || theta > Math.PI) throw new IllegalStateException("Theta must be >= 0 and <= PI");
+		if(radius < 0.0) throw new IllegalStateException("radius must be >= 0.0");
 		
 	}
 		

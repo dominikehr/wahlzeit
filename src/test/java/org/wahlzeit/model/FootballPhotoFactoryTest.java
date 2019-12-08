@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
+import org.wahlzeit.customexceptions.FootballPhotoException;
 import org.wahlzeit.testEnvironmentProvider.LocalDatastoreServiceTestConfigProvider;
 import org.wahlzeit.testEnvironmentProvider.RegisteredOfyEnvironmentProvider;
 
@@ -69,7 +70,7 @@ public class FootballPhotoFactoryTest {
 	// test whether photo is indeed created as instance of FootballPhoto
 	// using overloaded method taking id
 	@Test
-	public void testCreatePhotoId() {
+	public void testCreatePhotoId() throws FootballPhotoException {
 		//ARRANGE
 		FootballPhotoFactory.initialize();
 		PhotoId id = new PhotoId(666);

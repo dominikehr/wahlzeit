@@ -3,6 +3,7 @@ package org.wahlzeit.model;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class FootballPhoto extends Photo {
 
 	//list of player names that may be present in the FootballPhoto

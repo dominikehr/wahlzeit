@@ -138,6 +138,11 @@ public class CartesianCoordinateTest {
 		assertEquals(expected, actual, EPSm6);
 	}
 	
+	//test whether exception is thrown once null parameter passed
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetCartesianDistanceWithNull() {
+		cartCoord6.getCartesianDistance(null);
+	}
 	
 	/*	check interchangeability of coordinate class:
 	 * use different Coordinate types to invoke on / pass as parameter
@@ -221,6 +226,12 @@ public class CartesianCoordinateTest {
 	public void testGetCentralAngle4() {
 		double expected = 0.590436677318338;
 		assertEquals(expected, cartCoord1.getCentralAngle(sphereCoord8), EPSm6);
+	}
+	
+	//test whether exception is thrown once null parameter passed
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetCentralAngleWithNull() {
+		cartCoord1.getCentralAngle(null);
 	}
 
 }

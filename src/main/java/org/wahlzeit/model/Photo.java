@@ -144,6 +144,9 @@ public class Photo extends DataObject {
 	 * @methodtype constructor
 	 */
 	public Photo(PhotoId myId) {
+		if(myId == null) {
+			throw new IllegalArgumentException("PhotoID must not be null");
+		}
 		id = myId;
 
 		incWriteCount();

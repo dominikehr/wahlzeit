@@ -135,6 +135,13 @@ public class SphericCoordinateTest {
 		double actual = sphereCoord7.getCartesianDistance(cartCoord8);
 		assertEquals(expected, actual, EPSm6);
 	}
+	
+	//test whether exception is thrown once null parameter passed
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetCartesianDistanceWithNull() {
+		sphereCoord7.getCartesianDistance(null);
+	}
+	
 					
 				
 	//=================== test conversion to CartesianCoordinate ==========================
@@ -190,6 +197,12 @@ public class SphericCoordinateTest {
 	public void testGetCentralAngle4() {
 		double expected = 0.590436677318338;
 		assertEquals(expected, cartCoord1.getCentralAngle(sphereCoord4), EPSm6);
+	}
+	
+	//test whether exception is thrown once null parameter passed
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetCentralAngleWithNull() {
+		sphereCoord2.getCentralAngle(null);
 	}
 
 }
