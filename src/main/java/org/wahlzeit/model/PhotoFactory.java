@@ -20,7 +20,7 @@
 
 package org.wahlzeit.model;
 
-import org.wahlzeit.customexceptions.FootballPhotoException;
+import org.wahlzeit.customexceptions.FootballPhotoCreationException;
 import org.wahlzeit.services.LogBuilder;
 
 import java.util.logging.Logger;
@@ -82,9 +82,9 @@ public class PhotoFactory {
 
 	/**
 	 * Creates a new photo with the specified id
-	 * @throws FootballPhotoException 
+	 * @throws FootballPhotoCreationException 
 	 */
-	public Photo createPhoto(PhotoId id) throws FootballPhotoException {
+	public Photo createPhoto(PhotoId id) throws FootballPhotoCreationException {
 		return new Photo(id);
 	}
 

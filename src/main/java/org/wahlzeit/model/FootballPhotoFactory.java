@@ -2,7 +2,7 @@ package org.wahlzeit.model;
 
 import java.util.logging.Logger;
 
-import org.wahlzeit.customexceptions.FootballPhotoException;
+import org.wahlzeit.customexceptions.FootballPhotoCreationException;
 import org.wahlzeit.services.LogBuilder;
 
 public class FootballPhotoFactory extends PhotoFactory {
@@ -67,12 +67,12 @@ public class FootballPhotoFactory extends PhotoFactory {
 	 * Create new FootballPhoto with specific PhotoId. Override from superclass
 	 */
 	@Override
-	public Photo createPhoto(PhotoId id) throws FootballPhotoException {
+	public Photo createPhoto(PhotoId id) throws FootballPhotoCreationException {
 		Photo footballPhoto;
 		try {
 			footballPhoto = new FootballPhoto(id);
 		} catch (IllegalArgumentException e) {
-			throw new FootballPhotoException("Instantation failed, see details: " + e.getMessage());
+			throw new FootballPhotoCreationException("Instantation of Football photo failed, see details: " + e.getMessage());
 		}
 		return footballPhoto;
 	}

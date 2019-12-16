@@ -1,5 +1,7 @@
 package org.wahlzeit.model;
 
+import org.wahlzeit.customexceptions.CoordinateComputationException;
+import org.wahlzeit.customexceptions.CoordinateConversionException;
 import org.wahlzeit.utils.DoubleValuesUtil;
 
 public abstract class AbstractCoordinate implements Coordinate {
@@ -14,13 +16,21 @@ public abstract class AbstractCoordinate implements Coordinate {
 		// assert precondition to provide valid execution environment
 		assertIsNonNullArgument(coordinate);
 		// convert implicit this parameter on which method invoked on to cartesian
-		CartesianCoordinate cartCoord = this.asCartesianCoordinate();
+		CartesianCoordinate cartCoord = null;
 		// convert method argument to cartesian -- calculation will be working on cartesian only
-		CartesianCoordinate cartCoord2 = coordinate.asCartesianCoordinate();
+		CartesianCoordinate cartCoord2 = null;
+		try {
+			cartCoord = this.asCartesianCoordinate();
+			cartCoord2 = coordinate.asCartesianCoordinate();
+		} catch (CoordinateConversionException e) {
+			throw new CoordinateComputationException(this, "Cartesian distance could not be computed since conversion into cartesian failed. Cause " + e.getMessage());
+		}
 		// delegate to implementation inside CartesianCoordinate class
 		double cartDistance = cartCoord.doGetCartesianDistance(cartCoord2);
 		// assert postcondition: cartesian distance has to be a valid double number which is not below zero
-		assert (DoubleValuesUtil.isValidDouble(cartDistance) && !(cartDistance < 0.0)) : "Cartesian distance is invalid double or below 0";
+		if(!DoubleValuesUtil.isValidDouble(cartDistance) || cartDistance < 0.0) {
+			throw new CoordinateComputationException(this, "Cartesian distance computation failed as result is invalid double or below 0");
+		}
 		// ensure that computation did not violate class invariants
 		assertClassInvariants();
 		return cartDistance;
@@ -53,13 +63,21 @@ public abstract class AbstractCoordinate implements Coordinate {
 		// assert precondition to provide valid execution environment
 		assertIsNonNullArgument(coordinate);
 		// convert implicit this parameter on which method invoked on to spheric
-		SphericCoordinate sphereCoord = this.asSphericCoordinate();
+		SphericCoordinate sphereCoord;
 		// convert method argument to spheric -- calculation will be working on spheric only
-		SphericCoordinate sphereCoord2 = coordinate.asSphericCoordinate();
+		SphericCoordinate sphereCoord2;
+		try {
+			sphereCoord = this.asSphericCoordinate();
+			sphereCoord2 = coordinate.asSphericCoordinate();
+		} catch (CoordinateConversionException e) {
+			throw new CoordinateComputationException(this, "Central Angle could not be computed as conversion into spheric failed. Cause " + e.getMessage());
+		}
 		// delegate to implementation inside SphericCoordinate class
 		double centralAngle = sphereCoord.doGetCentralAngle(sphereCoord2);
 		// assert postcondition: central angle has to be a valid double value
-		assert DoubleValuesUtil.isValidDouble(centralAngle) : "Central angle is invalid double";
+		if(!DoubleValuesUtil.isValidDouble(centralAngle)) {
+			throw new CoordinateComputationException(this, "Central Angle computation failed as result is invalid double");
+		}
 		// ensure that computation did not violate class invariants
 		assertClassInvariants();
 		return centralAngle;

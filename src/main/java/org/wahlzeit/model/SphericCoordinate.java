@@ -1,59 +1,84 @@
 package org.wahlzeit.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.wahlzeit.customexceptions.CoordinateConversionException;
 import org.wahlzeit.utils.DoubleValuesUtil;
 
 public class SphericCoordinate extends AbstractCoordinate {
 	//latitude
-	private double phi;
+	private final double phi;
 	//longitude
-	private double theta;
-	private double radius;
+	private final double theta;
+	private final double radius;
 	
-	public SphericCoordinate(double phi, double theta, double radius) {
+	private static final Map<Integer, SphericCoordinate> sphereCoordMap = new HashMap<>();
+	
+	
+	private SphericCoordinate(double phi, double theta, double radius) {
+		this.phi = phi;
+		this.theta = theta;
+		this.radius = radius;
+	}
+	
+	public static SphericCoordinate getInstance(double phi, double theta, double radius) {
 		boolean isValidDouble = DoubleValuesUtil.isValidDouble(phi) &&
 				DoubleValuesUtil.isValidDouble(theta) && DoubleValuesUtil.isValidDouble(radius);
 		if(!isValidDouble) {
 			throw new IllegalArgumentException("Attributes phi, theta, radius must all be valid and finite double values");
 		}
-		
 		assertIsValidPhi(phi);
-		this.phi = phi;
-		
 		assertIsValidTheta(theta);
-		this.theta = theta;
-		
 		assertIsValidRadius(radius);
-		this.radius = radius;
+		
+		// retrieve key by using helper method. No beforehand SphericCoordinate instantiation needed
+		Integer key = doGetHashCode(phi,theta,radius);
+		// Look-up
+		SphericCoordinate result = sphereCoordMap.get(key);
+		if(result == null) {
+			synchronized(SphericCoordinate.class) {
+				result = sphereCoordMap.get(key);
+				if(result == null) {
+					result = new SphericCoordinate(phi,theta,radius);
+					sphereCoordMap.put(key, result);
+				}
+			}
+		}
+		return result;
 	}
 	
 	public double getPhi() {
 		return phi;
 	}
-
-	public void setPhi(double phi) {
+	
+	// setter within value object pattern. If upon setting value we have to equal instances return one of them
+	public SphericCoordinate setPhi(double phi) {
 		// check whether valid input provided else throw exception
 		assertIsValidPhi(phi);
-		this.phi = phi;
+		return SphericCoordinate.getInstance(phi, this.getTheta(), this.getRadius());
 	}
 
 	public double getTheta() {
 		return theta;
 	}
 
-	public void setTheta(double theta) {
+	// setter within value object pattern. If upon setting value we have to equal instances return one of them
+	public SphericCoordinate setTheta(double theta) {
 		// check whether valid input provided else throw exception
 		assertIsValidTheta(theta);
-		this.theta = theta;
+		return SphericCoordinate.getInstance(this.getPhi(), theta, this.getRadius());
 	}
 
 	public double getRadius() {
 		return radius;
 	}
 
-	public void setRadius(double radius) {
+	// setter within value object pattern. If upon setting value we have to equal instances return one of them
+	public SphericCoordinate setRadius(double radius) {
 		// check whether valid input provided else throw exception
 		assertIsValidRadius(radius);
-		this.radius = radius;
+		return SphericCoordinate.getInstance(this.getPhi(),this.getTheta(), radius);
 	}
 	
 	/*
@@ -88,17 +113,24 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 * @methodproperty: composed
 	 */
 	@Override
-	public CartesianCoordinate asCartesianCoordinate() {
+	public CartesianCoordinate asCartesianCoordinate() throws CoordinateConversionException {
 		//first make sure that we start the conversion with a valid SphericCoordinate
 		assertClassInvariants();
 		
-		double x = sphericCoordinateAsCartesianX();
-		double y = sphericCoordinateAsCartesianY();
-		double z = sphericCoordinateAsCartesianZ();
+		double x;
+		double y;
+		double z;
+		try {
+			x = sphericCoordinateAsCartesianX();
+			y = sphericCoordinateAsCartesianY();
+			z = sphericCoordinateAsCartesianZ();
+		} catch (IllegalArgumentException e) {
+			throw new CoordinateConversionException(this, "Conversion into cartesian failed. Cause: " + e.getMessage());
+		}
 		
 		// ensure that computation did not violate class invariants 
 		assertClassInvariants();
-		return new CartesianCoordinate(x,y,z);
+		return CartesianCoordinate.getInstance(x, y, z);
 	}
 	
 	/*
@@ -157,7 +189,12 @@ public class SphericCoordinate extends AbstractCoordinate {
 		// as this method has been invoked on a Coordinate of dynamic type SphericCoordinate
 		// we convert the coordinate parameter into SphericCoordinate as well and invoke
 		// equality check in terms of double values on two SphericCoordinates
-		SphericCoordinate sphereCoord = coordinate.asSphericCoordinate();
+		SphericCoordinate sphereCoord;
+		try {
+			sphereCoord = coordinate.asSphericCoordinate();
+		} catch (CoordinateConversionException e) {
+			return false;
+		}
 		
 		//check equality of double values using helper method provided in abstract superclass
 		boolean eqPhi = DoubleValuesUtil.compareDoubles(this.getPhi() , sphereCoord.getPhi());
@@ -170,14 +207,26 @@ public class SphericCoordinate extends AbstractCoordinate {
 	// override hashCode as customary when overriding equals()
 	@Override
 	public int hashCode() {
+		// delegate to doGetHashCode helper method
+		int hashCode = doGetHashCode(this.getPhi(), this.getTheta(), this.getRadius());
+		return hashCode;
+	}
+
+	/*
+	 * @methodtype: get method
+	 * @methodproperty: primitive
+	 * Features computation of hashCode value. Static in order to make hashCode computation
+	 * unreliant on already instantiated objects for value object look-up
+	 */
+	private static int doGetHashCode(double v1, double v2, double v3) {
 		final int prime = 31;
 		int result = 1;
 		long temp;
-		temp = Double.doubleToLongBits(phi);
+		temp = Double.doubleToLongBits(v1);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(theta);
+		temp = Double.doubleToLongBits(v2);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(radius);
+		temp = Double.doubleToLongBits(v3);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
@@ -188,18 +237,19 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 */
 	@Override
 	protected void assertClassInvariants() {
-		if(Double.isNaN(phi)) throw new IllegalStateException("attribute phi is NaN");
-		if(Double.isNaN(theta)) throw new IllegalStateException("attribute theta is NaN");
-		if(Double.isNaN(radius)) throw new IllegalStateException("attribute radius is NaN");
-		if(Double.isInfinite(phi)) throw new IllegalStateException("attribute phi is infinite");
-		if(Double.isInfinite(theta)) throw new IllegalStateException("attribute theta is infinite");
-		if(Double.isInfinite(radius)) throw new IllegalStateException("attribute radius is infinite");
+		String msg = "Class invariants violated: ";
+		if(Double.isNaN(phi)) throw new IllegalStateException(msg + "attribute phi is NaN");
+		if(Double.isNaN(theta)) throw new IllegalStateException(msg + "attribute theta is NaN");
+		if(Double.isNaN(radius)) throw new IllegalStateException(msg + "attribute radius is NaN");
+		if(Double.isInfinite(phi)) throw new IllegalStateException(msg + "attribute phi is infinite");
+		if(Double.isInfinite(theta)) throw new IllegalStateException(msg + "attribute theta is infinite");
+		if(Double.isInfinite(radius)) throw new IllegalStateException(msg + "attribute radius is infinite");
 		
 		
 		// attribute-specific checks
-		if(phi < 0.0 || phi >= 2* Math.PI) throw new IllegalStateException("Phi must be >= 0 and < 2PI");
-		if(theta < 0.0 || theta > Math.PI) throw new IllegalStateException("Theta must be >= 0 and <= PI");
-		if(radius < 0.0) throw new IllegalStateException("radius must be >= 0.0");
+		if(phi < 0.0 || phi >= 2* Math.PI) throw new IllegalStateException(msg + "Phi must be >= 0 and < 2PI");
+		if(theta < 0.0 || theta > Math.PI) throw new IllegalStateException(msg + "Theta must be >= 0 and <= PI");
+		if(radius < 0.0) throw new IllegalStateException(msg + "radius must be >= 0.0");
 		
 	}
 		

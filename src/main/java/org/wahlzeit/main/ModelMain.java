@@ -23,6 +23,7 @@ package org.wahlzeit.main;
 import com.google.appengine.api.images.Image;
 import com.google.appengine.api.images.ImagesServiceFactory;
 
+import org.wahlzeit.customexceptions.FootballPhotoCreationException;
 import org.wahlzeit.model.FootballPhotoFactory;
 import org.wahlzeit.model.FootballPhotoManager;
 import org.wahlzeit.model.GlobalsManager;
@@ -119,6 +120,8 @@ public abstract class ModelMain extends AbstractMain {
 				Photo newPhoto = photoManager.createPhoto(photo.getName(), image);
 				user.addPhoto(newPhoto);
 				userManager.addClient(user);
+			} catch (FootballPhotoCreationException e) {
+				log.warning("Unable to create photo " + photo.getAbsoluteFile() + "| " + e.getMessage());
 			} catch (Exception e) {
 				log.warning("Unable to add photo: " + photo.getAbsoluteFile());
 			}

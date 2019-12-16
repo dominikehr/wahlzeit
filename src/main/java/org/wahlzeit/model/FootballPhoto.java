@@ -15,6 +15,9 @@ public class FootballPhoto extends Photo {
 	
 	public FootballPhoto(PhotoId id) {
 		super(id);
+		if(id == null) {
+			throw new IllegalArgumentException("PhotoID must not be null");
+		}
 	}
 
 	/*

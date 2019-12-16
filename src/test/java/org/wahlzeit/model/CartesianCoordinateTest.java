@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.wahlzeit.customexceptions.CoordinateConversionException;
 
 
 public class CartesianCoordinateTest {
@@ -30,24 +31,24 @@ public class CartesianCoordinateTest {
 	
 	@Before
 	public void setUp() {
-		cartCoord1 = new CartesianCoordinate(3, 4, 6.7);
-		cartCoord2 = new CartesianCoordinate(3, 4, 6.7);
-		cartCoord3 = new CartesianCoordinate(0,-4,6.7);
-		cartCoord4 = new CartesianCoordinate(0,-4,6.7);
-		cartCoord5 = new CartesianCoordinate(4.2,0,-1);
-		cartCoord6 = new CartesianCoordinate (12,3,9);
-		cartCoord7 = new CartesianCoordinate(0.0,2.0,0.675654);
-		cartCoord8 = new CartesianCoordinate(1.2328323, 3.352732, 31.2323);
+		cartCoord1 = CartesianCoordinate.getInstance(3, 4, 6.7);
+		cartCoord2 = CartesianCoordinate.getInstance(3, 4, 6.7);
+		cartCoord3 = CartesianCoordinate.getInstance(0,-4,6.7);
+		cartCoord4 = CartesianCoordinate.getInstance(0,-4,6.7);
+		cartCoord5 = CartesianCoordinate.getInstance(4.2,0,-1);
+		cartCoord6 = CartesianCoordinate.getInstance(12,3,9);
+		cartCoord7 = CartesianCoordinate.getInstance(0.0,2.0,0.675654);
+		cartCoord8 = CartesianCoordinate.getInstance(1.2328323, 3.352732, 31.2323);
 		
-		sphereCoord1 = new SphericCoordinate(0.64110876885971, 0.92729521800161, 8.3600239234107);
-		sphereCoord5 = new SphericCoordinate(1.8045395076638, 0, 4.3174066289846);
-		sphereCoord6 = new SphericCoordinate(0.94178152436822, 0.24497866312686, 15.297058540778);
-		sphereCoord7 = new SphericCoordinate(1.2450069391398, 1.5707963267949, 2.1110443689596);
-		sphereCoord8 = new SphericCoordinate(0.11388065015818, 1.2184323624132, 31.435922932749);
+		sphereCoord1 = SphericCoordinate.getInstance(0.64110876885971, 0.92729521800161, 8.3600239234107);
+		sphereCoord5 = SphericCoordinate.getInstance(1.8045395076638, 0, 4.3174066289846);
+		sphereCoord6 = SphericCoordinate.getInstance(0.94178152436822, 0.24497866312686, 15.297058540778);
+		sphereCoord7 = SphericCoordinate.getInstance(1.2450069391398, 1.5707963267949, 2.1110443689596);
+		sphereCoord8 = SphericCoordinate.getInstance(0.11388065015818, 1.2184323624132, 31.435922932749);
 		
 		// 2 and 3 do not correspond to any particular cartCoords 
-		sphereCoord2 = new SphericCoordinate(0.5, 0.923, 4.0);
-		sphereCoord3 = new SphericCoordinate(0.3, 3.13, 3.0);
+		sphereCoord2 = SphericCoordinate.getInstance(0.5, 0.923, 4.0);
+		sphereCoord3 = SphericCoordinate.getInstance(0.3, 3.13, 3.0);
 	}
 
 	//=================== check isEqual() method ==========================
@@ -72,14 +73,14 @@ public class CartesianCoordinateTest {
 	
 	//check equality between CartesianCoordinate and SphericCoordinate that have exact same values after conversion
 	@Test
-	public void testEquals4() {
+	public void testEqualsCartCoordSphereCoord() {
 		assertEquals(cartCoord1, sphereCoord1);
 	}
 	
 	//check inequality:
 	@Test
 	public void testNotEquals1() {
-		CartesianCoordinate coordUnequal1 = new CartesianCoordinate(0,-4,6.6);
+		CartesianCoordinate coordUnequal1 = CartesianCoordinate.getInstance(0,-4,6.6);
 		assertNotEquals(cartCoord1,coordUnequal1);
 	}
 	
@@ -130,8 +131,8 @@ public class CartesianCoordinateTest {
 	//test only 0 boundary value:
 	@Test
 	public void testGetCartesianDistance3(){
-		CartesianCoordinate coordNull1 = new CartesianCoordinate(0.0, 0.0, 0.0);
-		CartesianCoordinate coordNull2 = new CartesianCoordinate(0.0, 0.0, 0.0);
+		CartesianCoordinate coordNull1 = CartesianCoordinate.getInstance(0.0, 0.0, 0.0);
+		CartesianCoordinate coordNull2 = CartesianCoordinate.getInstance(0.0, 0.0, 0.0);
 		
 		double expected = 0.0;
 		double actual = coordNull1.getCartesianDistance(coordNull2);
@@ -165,7 +166,7 @@ public class CartesianCoordinateTest {
 	
 	//=================== check conversion to SphericCoordinate ==========================
 	@Test
-	public void testAsSphericCoordinate1() {
+	public void testAsSphericCoordinate1() throws CoordinateConversionException {
 		SphericCoordinate sphereCoordConversion = cartCoord1.asSphericCoordinate();
 		assertTrue(sphereCoordConversion.equals(sphereCoord1));
 		assertTrue(sphereCoord1.equals(sphereCoordConversion));
@@ -173,7 +174,7 @@ public class CartesianCoordinateTest {
 	}
 	
 	@Test
-	public void testAsSphericCoordinate2() {
+	public void testAsSphericCoordinate2() throws CoordinateConversionException {
 		SphericCoordinate sphereCoordConversion2 = cartCoord8.asSphericCoordinate();
 		assertTrue(sphereCoordConversion2.equals(sphereCoord8));
 		assertTrue(sphereCoord8.equals(sphereCoordConversion2));
@@ -181,9 +182,9 @@ public class CartesianCoordinateTest {
 	}
 	
 	@Test
-	public void testAsSphericCoordinate3() {
+	public void testAsSphericCoordinate3() throws CoordinateConversionException {
 		//equivalent to sphereCoord3
-		CartesianCoordinate cartCoord3 = new CartesianCoordinate(-0.8865010484, 0.01027735996, 2.866009467);
+		CartesianCoordinate cartCoord3 = CartesianCoordinate.getInstance(-0.8865010484, 0.01027735996, 2.866009467);
 		SphericCoordinate sphereCoordConversion3 = cartCoord3.asSphericCoordinate();
 		assertTrue(sphereCoordConversion3.equals(sphereCoord3));
 		assertTrue(sphereCoord3.equals(sphereCoordConversion3));
@@ -191,8 +192,8 @@ public class CartesianCoordinateTest {
 	}
 	
 	//provoke assertion by working with 0.0 x-value which would lead to division by zero 
-	@Test(expected = IllegalArgumentException.class)
-	public void testAsSphericCoordinateException() {
+	@Test(expected = CoordinateConversionException.class)
+	public void testAsSphericCoordinateException() throws CoordinateConversionException {
 		cartCoord3.asSphericCoordinate();
 	}
 	
