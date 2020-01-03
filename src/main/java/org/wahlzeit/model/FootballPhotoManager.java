@@ -2,6 +2,12 @@ package org.wahlzeit.model;
 
 import java.util.logging.Logger;
 
+import org.wahlzeit.utils.PatternInstance;
+
+@PatternInstance (
+		patternName = "Singleton",
+		participants = { "Singleton (FootballPhotoManager)" }
+)
 
 public class FootballPhotoManager extends PhotoManager {
 

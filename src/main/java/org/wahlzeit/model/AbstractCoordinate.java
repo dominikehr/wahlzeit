@@ -3,6 +3,14 @@ package org.wahlzeit.model;
 import org.wahlzeit.customexceptions.CoordinateComputationException;
 import org.wahlzeit.customexceptions.CoordinateConversionException;
 import org.wahlzeit.utils.DoubleValuesUtil;
+import org.wahlzeit.utils.PatternInstance;
+
+@PatternInstance ( 
+		patternName = "Template Method",
+		participants = { "AbstractClass (AbstractCoordinate)",
+				"ConcreteClass (CartesianCoordinate, SphericCoordinate)" 
+						} 
+) 
 
 public abstract class AbstractCoordinate implements Coordinate {
 	

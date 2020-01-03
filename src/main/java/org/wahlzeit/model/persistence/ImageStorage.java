@@ -2,11 +2,19 @@ package org.wahlzeit.model.persistence;
 
 import org.wahlzeit.model.PhotoSize;
 import org.wahlzeit.services.LogBuilder;
+import org.wahlzeit.utils.PatternInstance;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.logging.Logger;
+
+@PatternInstance(
+		patternName = "Adapter",
+		participants = {"Adapter (DatastoreAdapter)",
+				"Adaptee (DatastoreAdapter class imports: 'com.googlecode.objectify*'",
+				"Target (ImageStorage)"}
+)
 
 /**
  * Abstract super class that offers a convenient interface for all kinds of storage types to store images.

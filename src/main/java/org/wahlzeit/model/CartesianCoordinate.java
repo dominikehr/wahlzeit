@@ -5,6 +5,14 @@ import java.util.Map;
 
 import org.wahlzeit.customexceptions.CoordinateConversionException;
 import org.wahlzeit.utils.DoubleValuesUtil;
+import org.wahlzeit.utils.PatternInstance;
+
+@PatternInstance ( 
+		patternName = "Template Method",
+		participants = { "AbstractClass (AbstractCoordinate)",
+				"ConcreteClass (CartesianCoordinate, SphericCoordinate)" 
+						} 
+) 
 
 public class CartesianCoordinate extends AbstractCoordinate{
 	// three private coordinate Variables reflecting x,y,z dimensions
@@ -51,8 +59,11 @@ public class CartesianCoordinate extends AbstractCoordinate{
 		return x;
 	}
 
-	// setter within value object pattern. If upon setting value we have to equal instances return one of them 
-	public CartesianCoordinate setX(double x) {
+	/*
+	 * Setter within value object pattern that instantiates new CartesianCoordinate in case of valid given x
+	 * If upon setting value we have two equal instances return one of them 
+	 */
+	public CartesianCoordinate newCartesianCoordinateWithX(double x) {
 		if(!DoubleValuesUtil.isValidDouble(x)) {
 			throw new IllegalArgumentException("Dimensional attribute x must be a valid and finite double value");
 		}
@@ -63,8 +74,11 @@ public class CartesianCoordinate extends AbstractCoordinate{
 		return y;
 	}
 
-	// setter within value object pattern. If upon setting value we have to equal instances return one of them 
-	public CartesianCoordinate setY(double y) {
+	/*
+	 * Setter within value object pattern that instantiates new CartesianCoordinate in case of valid given y
+	 * If upon setting value we have two equal instances return one of them 
+	 */ 
+	public CartesianCoordinate newCartesianCoordinateWithY(double y) {
 		if(!DoubleValuesUtil.isValidDouble(y)) {
 			throw new IllegalArgumentException("Dimensional attribute y must be a valid and finite double value");
 		}
@@ -75,8 +89,11 @@ public class CartesianCoordinate extends AbstractCoordinate{
 		return z;
 	}
 
-	// setter within value object pattern. If upon setting value we have to equal instances return one of them 
-	public CartesianCoordinate setZ(double z) {
+	/*
+	 * Setter within value object pattern that instantiates new CartesianCoordinate in case of valid given z
+	 * If upon setting value we have two equal instances return one of them 
+	 */ 
+	public CartesianCoordinate newCartesianCoordinateWithZ(double z) {
 		if(!DoubleValuesUtil.isValidDouble(z)) {
 			throw new IllegalArgumentException("Dimensional attribute z must be a valid and finite double value");
 		}
@@ -176,7 +193,7 @@ public class CartesianCoordinate extends AbstractCoordinate{
 	 * @methodtype: boolean query method
 	 * @methodproperty: primitive
 	 * custom-built equality contract determining equality 
-	 * based on equal coordinate variables
+	 * based on equal coordinate variables. Used within template method.
 	 */
 	@Override
 	protected boolean isEqualHelper(Coordinate coordinate) {

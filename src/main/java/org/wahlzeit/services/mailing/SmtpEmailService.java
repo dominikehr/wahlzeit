@@ -22,6 +22,7 @@ package org.wahlzeit.services.mailing;
 
 import org.wahlzeit.services.EmailAddress;
 import org.wahlzeit.services.LogBuilder;
+import org.wahlzeit.utils.PatternInstance;
 
 import javax.mail.Authenticator;
 import javax.mail.BodyPart;
@@ -36,9 +37,12 @@ import javax.mail.internet.MimeMultipart;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-/**
- *
- */
+@PatternInstance ( 
+		patternName = "Template Method",
+		participants = { "AbstractClass (AbstractEmailService)",
+				"ConcreteClass (MockEmailService, SmtpEmailService)" } 
+) 
+
 public class SmtpEmailService extends AbstractEmailService {
 
 	private static final Logger log = Logger.getLogger(SmtpEmailService.class.getName());

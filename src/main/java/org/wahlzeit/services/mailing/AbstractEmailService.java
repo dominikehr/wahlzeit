@@ -22,10 +22,18 @@ package org.wahlzeit.services.mailing;
 
 import org.wahlzeit.services.EmailAddress;
 import org.wahlzeit.services.LogBuilder;
+import org.wahlzeit.utils.PatternInstance;
 import org.wahlzeit.utils.StringUtil;
 
 import javax.mail.Message;
 import java.util.logging.Logger;
+
+
+@PatternInstance ( 
+		patternName = "Template Method",
+		participants = { "AbstractClass (AbstractEmailService)",
+				"ConcreteClass (MockEmailService, SmtpEmailService)" } 
+) 
 
 /**
  * Abstract superclass for non-trivial EmailServer implementations.

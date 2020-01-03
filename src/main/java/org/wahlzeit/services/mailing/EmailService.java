@@ -21,6 +21,14 @@
 package org.wahlzeit.services.mailing;
 
 import org.wahlzeit.services.EmailAddress;
+import org.wahlzeit.utils.PatternInstance;
+
+@PatternInstance ( 
+		patternName = "Decorator",
+		participants = { "Component (EmailService)",
+				"ConcreteComponent (MockEmailService, SmtpEmailService",
+				"ConcreteDecorator (LoggingEmailService)"} 
+) 
 
 /**
  * An EmailServer can send emails. Various implementations exist.

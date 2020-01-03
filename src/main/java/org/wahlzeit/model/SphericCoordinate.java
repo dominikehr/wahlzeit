@@ -5,6 +5,14 @@ import java.util.Map;
 
 import org.wahlzeit.customexceptions.CoordinateConversionException;
 import org.wahlzeit.utils.DoubleValuesUtil;
+import org.wahlzeit.utils.PatternInstance;
+
+@PatternInstance ( 
+		patternName = "Template Method",
+		participants = { "AbstractClass (AbstractCoordinate)",
+				"ConcreteClass (CartesianCoordinate, SphericCoordinate)" 
+						} 
+) 
 
 public class SphericCoordinate extends AbstractCoordinate {
 	//latitude
@@ -52,8 +60,11 @@ public class SphericCoordinate extends AbstractCoordinate {
 		return phi;
 	}
 	
-	// setter within value object pattern. If upon setting value we have to equal instances return one of them
-	public SphericCoordinate setPhi(double phi) {
+	/*
+	 *  Setter within value object pattern that instantiates new SphericCoordinate in case of valid given phi
+	 *  If upon setting value we have two equal instances return one of them
+	 */
+	public SphericCoordinate newSphericCoordinateWithPhi(double phi) {
 		// check whether valid input provided else throw exception
 		assertIsValidPhi(phi);
 		return SphericCoordinate.getInstance(phi, this.getTheta(), this.getRadius());
@@ -63,8 +74,11 @@ public class SphericCoordinate extends AbstractCoordinate {
 		return theta;
 	}
 
-	// setter within value object pattern. If upon setting value we have to equal instances return one of them
-	public SphericCoordinate setTheta(double theta) {
+	/*
+	 *  Setter within value object pattern that instantiates new SphericCoordinate in case of valid given theta
+	 *  If upon setting value we have two equal instances return one of them
+	 */
+	public SphericCoordinate newSphericCoordinateWithTheta(double theta) {
 		// check whether valid input provided else throw exception
 		assertIsValidTheta(theta);
 		return SphericCoordinate.getInstance(this.getPhi(), theta, this.getRadius());
@@ -74,8 +88,11 @@ public class SphericCoordinate extends AbstractCoordinate {
 		return radius;
 	}
 
-	// setter within value object pattern. If upon setting value we have to equal instances return one of them
-	public SphericCoordinate setRadius(double radius) {
+	/*
+	 *  Setter within value object pattern that instantiates new SphericCoordinate in case of valid given radius
+	 *  If upon setting value we have two equal instances return one of them
+	 */
+	public SphericCoordinate newSphericCoordinateWithRadius(double radius) {
 		// check whether valid input provided else throw exception
 		assertIsValidRadius(radius);
 		return SphericCoordinate.getInstance(this.getPhi(),this.getTheta(), radius);
@@ -182,7 +199,7 @@ public class SphericCoordinate extends AbstractCoordinate {
 	 * @methodtype: boolean query method
 	 * @methodproperty: primitive
 	 * custom-built equality contract determining equality 
-	 * based on equal coordinate variables
+	 * based on equal coordinate variables. Used within template method.
 	 */
 	@Override
 	protected boolean isEqualHelper(Coordinate coordinate) {

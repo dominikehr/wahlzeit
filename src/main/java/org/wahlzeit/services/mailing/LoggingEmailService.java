@@ -22,8 +22,16 @@ package org.wahlzeit.services.mailing;
 
 import org.wahlzeit.services.EmailAddress;
 import org.wahlzeit.services.LogBuilder;
+import org.wahlzeit.utils.PatternInstance;
 
 import java.util.logging.Logger;
+
+@PatternInstance ( 
+		patternName = "Decorator",
+		participants = { "Component (EmailService)",
+				"ConcreteComponent (MockEmailService, SmtpEmailService",
+				"ConcreteDecorator (LoggingEmailService)"} 
+) 
 
 /**
  * A logging mailing service logs email send attempts before sending emails. This is a decorator pattern application.

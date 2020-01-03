@@ -22,8 +22,14 @@ package org.wahlzeit.model;
 
 import org.wahlzeit.customexceptions.FootballPhotoCreationException;
 import org.wahlzeit.services.LogBuilder;
+import org.wahlzeit.utils.PatternInstance;
 
 import java.util.logging.Logger;
+
+@PatternInstance (
+		patternName = "Singleton",
+		participants = { "Singleton (PhotoFactory)" }
+)
 
 /**
  * An Abstract Factory for creating photos and related objects.

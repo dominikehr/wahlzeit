@@ -4,6 +4,12 @@ import java.util.logging.Logger;
 
 import org.wahlzeit.customexceptions.FootballPhotoCreationException;
 import org.wahlzeit.services.LogBuilder;
+import org.wahlzeit.utils.PatternInstance;
+
+@PatternInstance (
+		patternName = "Singleton",
+		participants = { "Singleton (FootballPhotoFactory)" }
+)
 
 public class FootballPhotoFactory extends PhotoFactory {
 

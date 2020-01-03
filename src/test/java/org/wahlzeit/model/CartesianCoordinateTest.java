@@ -77,6 +77,20 @@ public class CartesianCoordinateTest {
 		assertEquals(cartCoord1, sphereCoord1);
 	}
 	
+	/*
+	 * check sharing feature within value object pattern: 
+	 * If instantiation of coordinate with equal value attributes to already existing one is attempted
+	 * then no actual instantiation is performed but just the old reference returned (so "==" will work for equality check)
+	 */
+	@Test
+	public void testEqualsWithTwoCoordinatesSameAttributes() {
+		assertTrue(cartCoord1 == cartCoord2);
+		// however, "==" will not work when two coordinate values are only equal after conversion as per my current implementation
+		assertFalse(cartCoord1 == sphereCoord1);
+		// equals method however does account for different coordinate types
+		assertEquals(cartCoord1, sphereCoord1);
+	}
+	
 	//check inequality:
 	@Test
 	public void testNotEquals1() {
@@ -89,7 +103,7 @@ public class CartesianCoordinateTest {
 	public void testNotEquals2() {
 		assertNotEquals(cartCoord3,null);
 	}
-	
+		
 	//check inequality with a class that is not an instance of Coordinate
 	@Test
 	public void testNotEquals3() {
@@ -215,7 +229,6 @@ public class CartesianCoordinateTest {
 	
 	/*	check interchangeability of coordinate class:
 	 * use different Coordinate types to invoke on / pass as parameter
-	 * 
 	 */
 	@Test
 	public void testGetCentralAngle3() {

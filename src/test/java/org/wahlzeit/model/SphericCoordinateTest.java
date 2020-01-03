@@ -76,6 +76,20 @@ public class SphericCoordinateTest {
 		assertEquals(sphereCoord2, cartCoord2);
 	}
 	
+	/*
+	 * check sharing feature within value object pattern: 
+	 * If instantiation of coordinate with equal value attributes to already existing one is attempted
+	 * then no actual instantiation is performed but just the old reference returned (so "==" will work for equality check)
+	 */
+	@Test
+	public void testEqualsWithTwoCoordinatesSameAttributes() {
+		assertTrue(sphereCoord4 == sphereCoord5);
+		// however, "==" will not work when two coordinate values are only equal after conversion as per my current implementation
+		assertFalse(sphereCoord4 == sphereCoord7);
+		// equals method however does account for different coordinate types
+		assertEquals(cartCoord1, sphereCoord1);
+	}
+	
 	//check inequality:
 	@Test
 	public void testNotEquals1() {
