@@ -1,10 +1,12 @@
 package org.wahlzeit.model;
 
 import java.util.logging.Logger;
+import java.util.Date;
 
 import org.wahlzeit.customexceptions.FootballPhotoCreationException;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.utils.PatternInstance;
+
 
 @PatternInstance (
 		patternName = "Singleton",
@@ -70,6 +72,7 @@ public class FootballPhotoFactory extends PhotoFactory {
 	}
 	
 	/*
+	 * @methodtype: factory
 	 * Create new FootballPhoto with specific PhotoId. Override from superclass
 	 */
 	@Override
@@ -77,6 +80,34 @@ public class FootballPhotoFactory extends PhotoFactory {
 		Photo footballPhoto;
 		try {
 			footballPhoto = new FootballPhoto(id);
+		} catch (IllegalArgumentException e) {
+			throw new FootballPhotoCreationException("Instantation of Football photo failed, see details: " + e.getMessage());
+		}
+		return footballPhoto;
+	}
+	
+	/*
+	 * @methodtype: factory
+	 * Overloaded factory method that also takes in Football as parameter
+	 */
+	public Photo createPhoto(PhotoId id, Football football) throws FootballPhotoCreationException {
+		Photo footballPhoto;
+		try {
+			footballPhoto = new FootballPhoto(id, football);
+		} catch (IllegalArgumentException e) {
+			throw new FootballPhotoCreationException("Instantation of Football photo failed, see details: " + e.getMessage());
+		}
+		return footballPhoto;
+	}
+	
+	/*
+	 * @methodtype: factory
+	 * Overloaded factory method that also takes in Date as parameter
+	 */
+	public Photo createPhoto(PhotoId id, Football football, Date date) throws FootballPhotoCreationException {
+		Photo footballPhoto;
+		try {
+			footballPhoto = new FootballPhoto(id, football, date);
 		} catch (IllegalArgumentException e) {
 			throw new FootballPhotoCreationException("Instantation of Football photo failed, see details: " + e.getMessage());
 		}

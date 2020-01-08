@@ -168,5 +168,15 @@ public class StringUtil {
 			throw new IllegalArgumentException("invalid URL string");
 		}
 	}
+	
+	/*
+	 * @methodtype assertion method
+	 * ensuring that no invalid Strings are introduced into List structures
+	 * Validity in this context means no null or empty Strings
+	 */
+	public static void assertIsValidString(String string) {
+		if(string == null) throw new IllegalArgumentException("String passed must be non-null!");
+		if(string == "") throw new IllegalArgumentException("String passed must not be empty!");
+	}
 
 }
