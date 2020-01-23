@@ -3,8 +3,30 @@ package org.wahlzeit.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.wahlzeit.utils.StringUtil;
+
+/**
+ * 
+ * Instantiation process of a Football:
+ * 
+ * The instantiation process entails several consecutive steps that begin inside FootballManager.
+ * FootballManager provides two overloaded factory methods for Football instantiation. These take
+ * in either just the the type of the football scene depicted or a tournament type as well.
+ * Using these two attributes a look-up inside a map is performed which returns either an already
+ * existing FootballType or a new one. On this FootballType, the instance method createInstance is
+ * invoked which in turn invokes the Football constructor.
+ * There, actual instantiation takes place and a unique ID is assigned to the football instance.
+ * 
+ * This detailed description translates to the following key facts when determining its position as a sixtuple inside 
+ * the solution design space:
+ * 
+ * 1. Delegation of Object Creation: separate-object
+ * 2. Selection of Concrete Class: By-mapping 
+ * 3. Configuration of Class Mapping: In-code
+ * 4. Instantiation of Concrete Class: In-code
+ * 5. Initialization of New Object: Default ("In-second-step" option may be applicable as provided setter methods allow for this)
+ * 6. Building of Object Structure: Default
+ */
 
 public class Football {
 	protected FootballType footballType = null;

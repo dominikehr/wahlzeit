@@ -52,9 +52,9 @@ import java.util.logging.Logger;
 public class PhotoManager extends ObjectManager {
 
 	/**
-	 *
+	 * CW 13: Changed to FootballPhotoManager instance
 	 */
-	protected static final PhotoManager instance = new PhotoManager();
+	protected static final PhotoManager instance = new FootballPhotoManager();
 
 	private static final Logger log = Logger.getLogger(PhotoManager.class.getName());
 

@@ -1,13 +1,36 @@
 package org.wahlzeit.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 import org.wahlzeit.model.FootballType.FootballTypeScene;
 import org.wahlzeit.model.FootballType.Tournament;
-import org.wahlzeit.utils.StringUtil;
 
-import java.util.Date;
+
+/**
+ * 
+ * Instantiation process of a FootballPhoto:
+ * 
+ * The instantiation process entails several consecutive steps that begin inside ModelMain.
+ * Here, inside the createUser method the createPhoto method is invoked on a singleton instance of the PhotoManager class.
+ * The createPhoto method inside PhotoManager uses the static createPhoto method inside PhotoUtil.
+ * Inside PhotoUtil I have replaced the previous generic PhotoFactory with my own domain extension i.e. FootballPhotoFactory.
+ * The createPhoto method inside PhotoUtil retrieves a singleton instance of said FootballPhotoFactory on which it invokes
+ * the createPhoto method, taking a PhotoId instance as a parameter.
+ * Inside the factory createPhoto method in FootballPhotoFactory instantiation actually takes place by invoking the 
+ * FootballPhoto constructor. For this I provide several overloaded constructors delegating between oneanother in order
+ * to initialize several attributes--like the Football type object associated with the FootballPhoto--to their (default) values.
+ *
+ * This detailed description translates to the following key facts when determining its position as a sixtuple inside 
+ * the solution design space:
+ * 
+ * 1. Delegation of Object Creation: separate-object
+ * 2. Selection of Concrete Class: By-subclassing 
+ * 3. Configuration of Class Mapping: In-code
+ * 4. Instantiation of Concrete Class: In-code
+ * 5. Initialization of New Object: Default ("In-second-step" option equally applicable as provided setter methods allow for this)
+ * 6. Building of Object Structure: Default
+ *
+ */
 
 
 public class FootballPhoto extends Photo {
