@@ -28,6 +28,31 @@ import org.wahlzeit.utils.StringUtil;
  * 6. Building of Object Structure: Default
  */
 
+
+/**
+ * 
+ * Client-Service Collaboration
+ * This collaboration binds the role "Service" to this Football class
+ * and the role "Client" to the class {@link FootballPhoto #}
+ *
+ */
+
+/**
+ * 
+ * Base Object-Type Object Collaboration
+ * This collaboration binds the role "Base Object" to this Football class
+ * and the role "Type Object" to the class {@link FootballType #}
+ *
+ */
+
+/**
+ * 
+ * Manager-Element Collaboration
+ * This collaboration binds the role "Element" to this Football class
+ * and the role "Manager" to the class {@link FootballManager #}
+ *
+ */
+
 public class Football {
 	protected FootballType footballType = null;
 	

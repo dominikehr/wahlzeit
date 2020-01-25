@@ -33,6 +33,14 @@ import org.wahlzeit.model.FootballType.Tournament;
  */
 
 
+/**
+ * 
+ * Client-Service Collaboration
+ * This collaboration binds the role "Client" to this FootballPhoto class
+ * and the role "Service" to the class {@link Football #}
+ *
+ */
+
 public class FootballPhoto extends Photo {
 	/*
 	 *  The particular fooball scene depicted on the associated photo. Refrained from making this final

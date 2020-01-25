@@ -11,6 +11,15 @@ import org.wahlzeit.model.FootballType.FootballTypeScene;
 import org.wahlzeit.model.FootballType.Tournament;
 import org.wahlzeit.services.ObjectManager;
 
+
+/**
+ * 
+ * Manager-Element Collaboration
+ * This collaboration binds the role "Manager" to this FootballManager class
+ * and the role "Element" to the class {@link Football #}
+ *
+ */
+
 /*
  * Manager singleton charged with instantiating FootballType and Football instances 
  */

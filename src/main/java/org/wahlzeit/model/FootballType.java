@@ -6,6 +6,14 @@ import java.util.Set;
 
 import org.wahlzeit.services.DataObject;
 
+/**
+ * 
+ * Base Object-Type Object Collaboration
+ * This collaboration binds the role "Type Object" to this FootballType class
+ * and the role "Base Object" to the class {@link Football #}
+ *
+ */
+
 public class FootballType extends DataObject {
 	
 	/*
